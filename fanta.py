@@ -44,7 +44,7 @@ for indx, nome in enumerate(nomi):
 	   continue
 
 	d["squadra"] = squadre[indx].text
-	d["roulo"] = ruoli[indx].text
+	d["ruolo"] = ruoli[indx].text
 
 	d["quotazione"] = quotazioni[indx].text
 	d["partite_giocate"] = int(partite_giocate[indx].text.replace("-", "0"))
@@ -63,6 +63,48 @@ for indx, nome in enumerate(nomi):
 	nome = nome.text.replace("\n", "")
 	d["nome"] = nome
 	giocatori.append(d)
+
+
+giocatori_per_rigori_tirati = sorted(giocatori, key = lambda i: int(i['rigori_realizzati']),reverse=True)
+
+
+print()
+print("GIOCATORI SOTTO CON QUOTAZIONE SOTTO I 21 CON RIGORI REALIZZATI")
+for indx, g in enumerate(giocatori_per_rigori_tirati):
+ 	if int(g["quotazione"]) < 21 and int(g['rigori_realizzati']) != 0:
+ 		print(indx, "nome:", g["nome"],'rigori_realizzati:',  g['rigori_realizzati'],"squadra:", g["squadra"])
+
+
+giocatori_con_presenza = list(filter(lambda x: x["partite_giocate"] != 0, giocatori))
+
+
+giocatori_per_gol_fatti_su_partite = sorted(giocatori_con_presenza, key = lambda i: int(i['gol_fatti'])/i["partite_giocate"],reverse=True)
+
+
+print()
+print("GIOCATORI SOTTO CON QUOTAZIONE SOTTO I 21 CON COEFFICIENTE GOL_FATTI/PARTITE_GIOCATE MAGGIORE DI 0")
+for indx, g in enumerate(giocatori_per_gol_fatti_su_partite):
+	if int(g["quotazione"]) < 21 and int(g['gol_fatti'])/g["partite_giocate"] != 0:
+		print(indx, "nome:", g["nome"], "gol_fatti:", g['gol_fatti'], "partite_giocate:", g["partite_giocate"], "squadra:", g["squadra"], "gol_fatti/partite_giocate:", int(g['gol_fatti'])/g["partite_giocate"])
+
+
+giocatori_per_media_su_partite = sorted(giocatori_con_presenza, key = lambda i: float(i["media_voti"]),reverse=True)
+
+print()
+print("GIOCATORI SOTTO CON QUOTAZIONE SOTTO I 21 CON MEDIA VOTO SUPERIORE AL 6")
+for indx, g in enumerate(giocatori_per_media_su_partite):
+	if int(g["quotazione"]) < 21 and float(g["media_voti"]) > 6:
+		print(indx, "nome:", g["nome"], "quotazione:", g["quotazione"], "media_voti:", g['media_voti'], "partite_giocate:", g["partite_giocate"], "squadra:", g["squadra"])
+
+
+
+giocatori_per_magic_su_partite = sorted(giocatori_con_presenza, key = lambda i: float(i["magic_punti"]),reverse=True)
+
+print()
+print("GIOCATORI SOTTO CON QUOTAZIONE SOTTO I 21 CON VOTO MAGIC POSITIVO")
+for indx, g in enumerate(giocatori_per_magic_su_partite):
+	if int(g["quotazione"]) < 21 and float(g["magic_punti"]) > 0:
+		print(indx, "nome:", g["nome"], "quotazione:", g["quotazione"], "ruolo", g["ruolo"], "magic_punti:", g['magic_punti'], "partite_giocate:", g["partite_giocate"], "squadra:", g["squadra"])
 
 
 
